@@ -1,12 +1,16 @@
 class ProductController < ApplicationController
 
   def index
-    products = Product.all
-    render json: products
+    result = ListProducts.call
+    render json: result.products
   end
 
   def show
-    product = Product.find(params[:id])
-    render json: product
+    result = Products::FindOne.call(id: params[:id])
+    if result.success?
+      render json: result.product
+    else
+      render json: { result: result.message }
+    end
   end
 end
